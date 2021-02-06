@@ -10,9 +10,11 @@ namespace _3DShapeEditor
 {
     class Camera
     {
-        public float fov { get;} // field of view
-        public float near { get;} // przednia płaszczyzna obcinania
-        public float far { get; } // tylnia płaszczyzna obcinania
+        public float Fov { get; } = 90;// field of view
+        public float Near { get; } = 1; // przednia płaszczyzna obcinania
+        public float Far { get; } = 10;// tylnia płaszczyzna obcinania
+        private float aspect = (float)16 / 9;
+        public float Aspect { get => aspect; }
         private Vertex P; // pozycja kamery
         private Vertex T; // punkt na który skierowana jest kamera
 
@@ -25,31 +27,65 @@ namespace _3DShapeEditor
         {
             this.P = P;
             this.T = T;
-            fov = 90;
-            near = 1;
-            far = 10;
-            ChangePosition(P, T);
-            UpdateProjectionMatrix(aspect);
+            this.aspect = aspect;
+            ChangeProperties(P, T);
+            UpdateProjectionMatrix();
         }
-        public Camera(Vertex P, Vertex T, float aspect, float fov, float n, float f) : this(P, T, aspect)
+        public Camera(Vertex P, Vertex T, float aspect, float fov, float n, float f)
         {
-            this.fov = fov;
-            near = n;
-            far = f;
+            this.P = P;
+            this.T = T;
+            Fov = fov;
+            Near = n;
+            Far = f;
+            this.aspect = aspect;
+            ChangeProperties(P, T);
+            UpdateProjectionMatrix();
         }
-        public void ChangePosition(Vertex p, Vertex t)
+
+        public void ChangeProperties(Vertex p, Vertex t)
         {
             P = p;
             T = t;
             Vector3 Uworld = new Vector3(0, 1, 0);
             Vector3 D = new Vector3(P.X - T.X, P.Y - T.Y, P.Z - T.Z);
-            Vector3 R = Uworld * D;
-            Vector3 U = D * R;
             D = Vector3.Normalize(D);
+            Vector3 R = Vector3.Cross(Uworld, D);
             R = Vector3.Normalize(R);
+            Vector3 U = Vector3.Cross(D, R);
             U = Vector3.Normalize(U);
             UpdateViewMatrix(D, R, U);
         }
+
+        internal void ChangeAspect(float aspect)
+        {
+            this.aspect = aspect;
+            UpdateProjectionMatrix();
+        }
+
+        private void ChangePosition(Vertex p)
+        {
+            ChangeProperties(p, this.T);
+        }
+        private void ChangeLookingPosition(Vertex t)
+        {
+            ChangeProperties(this.P, t);
+        }
+        internal void IncrementPosition()
+        {
+            // do debugowania
+            //float stop = 10f;
+            //T.Z += 0.03f;
+            //if (T.Z >= stop)
+            //    T.Z = stop;
+            //ChangeLookingPosition(T);
+            float stop = 10f;
+            P.Z += 0.03f;
+            if (P.Z >= stop)
+                P.Z = stop;
+            ChangePosition(P);
+        }
+
         private void UpdateViewMatrix(Vector3 D, Vector3 R, Vector3 U)
         {
             Matrix4x4 mat = new Matrix4x4(R.X, R.Y, R.Z, 0,
@@ -62,12 +98,12 @@ namespace _3DShapeEditor
                                           0, 0, 0, 1);
             viewMatrix = mat * cam;
         }
-        public void UpdateProjectionMatrix(float aspect)
+        public void UpdateProjectionMatrix()
         {
-            projMatrix = new Matrix4x4(1 / ((float)Math.Tan(fov / 2) * aspect), 0, 0, 0,
-                                        0, 1 / (float)Math.Tan(fov / 2), 0, 0,
-                                        0, 0, (far + near) / (far - near), (-2 * far * near) / (far - near),
-                                        0, 0, 1, 0);
+            projMatrix = new Matrix4x4(1 / ((float)Math.Tan(Fov / 2) * Aspect), 0, 0, 0,
+                                        0, 1 / (float)Math.Tan(Fov / 2), 0, 0,
+                                        0, 0, -(Far + Near) / (Far - Near), -(2 * Far * Near) / (Far - Near),
+                                        0, 0, -1, 0);
         }
     }
 }

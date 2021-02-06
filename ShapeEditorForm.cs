@@ -13,7 +13,6 @@ namespace _3DShapeEditor
         {
             InitializeComponent();
             shapeManager = new ShapeManager(mainPictureBox.Width, mainPictureBox.Height);
-            shapeManager.SetDrawingScreenResolution(mainPictureBox.Width, mainPictureBox.Height);
             InitializeDrawingTimer();
             drawingTimer.Start();
         }
@@ -27,8 +26,9 @@ namespace _3DShapeEditor
 
         private void Repaint(object myObject, EventArgs e)
         {
-            foreach (Shape shape in shapeManager.Shapes)
-                shape.IncrementAngle(); // obiekty się obracają
+            shapeManager.Camera.IncrementPosition(); // kamera się porusza
+            //foreach (Shape shape in shapeManager.Shapes)
+            //    shape.IncrementAngle(); // obiekty się obracają
             mainPictureBox.Invalidate();
         }
         private void mainPictureBox_Paint(object sender, PaintEventArgs e)
@@ -37,9 +37,7 @@ namespace _3DShapeEditor
         }
         private void mainPictureBox_SizeChanged(object sender, EventArgs e)
         {
-            shapeManager.SetDrawingScreenResolution(mainPictureBox.Width, mainPictureBox.Height);
-            shapeManager.Camera.UpdateProjectionMatrix((float)mainPictureBox.Width / (float)mainPictureBox.Height);
+            shapeManager.ChangeDrawingScreenResolution(mainPictureBox.Width, mainPictureBox.Height);
         }
-
     }
 }

@@ -8,10 +8,12 @@ namespace _3DShapeEditor.Shapes
 {
     class Vertex // pionowy wektor reprezentujący pozycję w przestrzeni
     {
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Z { get; set; }
-        public float W { get; set; }
+        public float X { get; set; } = 0;
+        public float Y { get; set; } = 0;
+        public float Z { get; set; } = 0;
+        public float W { get; set; } = 1;
+
+        public Vertex() { }
 
         public Vertex(float x, float y, float z)
         {
@@ -25,6 +27,8 @@ namespace _3DShapeEditor.Shapes
             X /= W;
             Y /= W;
             Z /= W;
+            W = 1;
         }
+
     }
 }

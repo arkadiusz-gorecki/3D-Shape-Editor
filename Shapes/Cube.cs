@@ -9,10 +9,11 @@ namespace _3DShapeEditor.Shapes
 {
     class Cube: Shape
     {
-        public Cube(Pen pen, float a)
+        private Cube(Color c)
         {
-            a /= 2; // długość jednego boku
-            this.pen = pen;
+            edgePen = new Pen(c, 1);
+
+            float a = 1;
             //ściana North
             triangles.Add(new Triangle(-a, a, a,
                                        a, -a, a,
@@ -48,31 +49,52 @@ namespace _3DShapeEditor.Shapes
             triangles.Add(new Triangle(a, a, a,
                                        -a, a, -a,
                                        a, a, -a));
-            //ściana Bottom
+            ////ściana Bottom
             triangles.Add(new Triangle(-a, -a, -a,
                                        -a, -a, a,
                                        a, -a, a));
             triangles.Add(new Triangle(-a, -a, -a,
-                                       a, -a, -a,
+                                       a, -a, a,
                                        a, -a, -a));
         }
-        public Cube(Pen pen, float size, float x, float y, float z): this(pen, size)
+        public Cube(Color c, float size, float x, float y, float z): this(c)
         {
+            xScale *= size;
+            yScale *= size;
+            zScale *= size;
             this.x = x;
             this.y = y;
             this.z = z;
+            UpdateModelMatrix();
         }
-        public Cube(Pen pen, float size, float x, float y, float z, float xAngle, float yAngle, float zAngle) : this(pen, size, x, y, z)
+        public Cube(Color c, float size, float x, float y, float z, float xAngle, float yAngle, float zAngle) : this(c)
         {
+            xScale *= size;
+            yScale *= size;
+            zScale *= size;
+            this.x = x;
+            this.y = y;
+            this.z = z;
             this.xAngle = xAngle;
             this.yAngle = yAngle;
             this.zAngle = zAngle;
+            UpdateModelMatrix();
         }
-        public Cube(Pen pen, float size, float x, float y, float z, float xAngle, float yAngle, float zAngle, float xScale, float yScale, float zScale) : this(pen, size, x, y, z, xAngle, yAngle, zAngle)
+        public Cube(Color c, float size, float x, float y, float z, float xAngle, float yAngle, float zAngle, float xScale, float yScale, float zScale) : this(c)
         {
+            xScale *= size;
+            yScale *= size;
+            zScale *= size;
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.xAngle = xAngle;
+            this.yAngle = yAngle;
+            this.zAngle = zAngle;
             this.xScale = xScale;
             this.yScale = yScale;
             this.zScale = zScale;
+            UpdateModelMatrix();
         }
     }
 }

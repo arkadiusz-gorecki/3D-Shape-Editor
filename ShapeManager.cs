@@ -8,43 +8,50 @@ namespace _3DShapeEditor
 {
     public class ShapeManager
     {
-        public static float width; // wymiary rysowania
-        public static float height;
+        public static int width; // wymiary rysowania
+        public static int height;
         private List<Shape> shapes = new List<Shape>();
         private Camera camera;
         internal List<Shape> Shapes { get => shapes;}
         internal Camera Camera { get => camera;}
 
-        public ShapeManager(float w, float h)
+        private Pipeline pipeline = new Pipeline();
+
+        public ShapeManager(int w, int h)
         {
             width = w;
             height = h;
-            camera = new Camera(new Vertex(0, 0, 0), new Vertex(0, 0, 1), width / height);
+
+            camera = new Camera(new Vertex(6, 0, -4), new Vertex(0, 0, 2), (float)width / height, 90, 1, 10);
             GenerateCubes();
         }
 
         private void GenerateCubes()
         {
-            Pen pen = new Pen(new SolidBrush(Color.Red), 2);
-            shapes.Add(new Cube(pen, 2, 0, 0, 4, 0, 1, 1, 1, 1, 3));
-            pen = new Pen(new SolidBrush(Color.Green), 2);
-            shapes.Add(new Cube(pen, 1, 0, 3, 3, 1, 0, 0));
-            pen = new Pen(new SolidBrush(Color.Yellow), 2);
-            shapes.Add(new Cube(pen, 2, 3, 0, 3, 1, 0, 1));
+            shapes.Add(new Cube(Color.Red, 1, 2, 0, 4, 0, 0, 0, 1, 1, 2));
+            shapes.Add(new Cube(Color.Orange, 1, 0, 4, 0, 0, 0, 0, 1, 1, 1));
+            shapes.Add(new Cube(Color.Yellow, 1, 4, 0, 0, 0, 0, 0, 1, 1, 1));
+            shapes.Add(new Cube(Color.Green, 1, -4, 0, 0, 0, 0, 0, 1, 1, 1));
+            shapes.Add(new Cube(Color.Aquamarine, 1, 0, -4, 0, 0, 0, 0, 1, 1, 1));
+            shapes.Add(new Cube(Color.Blue, 1, 0, 0, -4, 0, 0, 0, 1, 1, 1));
         }
 
-        internal void SetDrawingScreenResolution(int w, int h)
+        internal void ChangeDrawingScreenResolution(int w, int h)
         {
             width = w;
             height = h;
+            camera.ChangeAspect((float)w / h);
         }
         public void DrawAllShapes(Graphics g)
         {
+            pipeline.viewMatrix = camera.GetViewMatrix;
+            pipeline.projectionMatrix = camera.GetProjectionMatrix;
+            pipeline.width = width;
+            pipeline.height = height;
+
             g.Clear(Color.Black);
             foreach (Shape shape in Shapes)
-            {
-                shape.DrawEdges(g, camera);
-            }
+                shape.DrawEdges(g, pipeline);
         }
 
     }
