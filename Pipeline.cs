@@ -129,9 +129,9 @@ namespace _3DShapeEditor
             Vertex vc2 = MatrixOperations.Transform(PVM, t.v2);
             Vertex vc3 = MatrixOperations.Transform(PVM, t.v3);
 
-            vc1.Normalize();
-            vc2.Normalize();
-            vc3.Normalize();
+            //vc1.Normalize();
+            //vc2.Normalize();
+            //vc3.Normalize();
 
             return new Triangle(vc1, vc2, vc3);
         }

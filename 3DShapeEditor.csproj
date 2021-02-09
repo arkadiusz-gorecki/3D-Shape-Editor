@@ -52,8 +52,20 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Shapes\CreateSphereForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Shapes\CreateSphereForm.Designer.cs">
+      <DependentUpon>CreateSphereForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MatrixOperations.cs" />
     <Compile Include="Pipeline.cs" />
+    <Compile Include="Shapes\CreateCubeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Shapes\CreateCubeForm.Designer.cs">
+      <DependentUpon>CreateCubeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Shapes\ScreenTriangle.cs" />
     <Compile Include="ShapeEditorForm.cs">
       <SubType>Form</SubType>
@@ -66,8 +78,12 @@
     <Compile Include="ShapeManager.cs" />
     <Compile Include="Shapes\Cube.cs" />
     <Compile Include="Shapes\Shape.cs" />
+    <Compile Include="Shapes\Sphere.cs" />
     <Compile Include="Shapes\Triangle.cs" />
     <Compile Include="Shapes\Vertex.cs" />
+    <EmbeddedResource Include="Shapes\CreateSphereForm.resx">
+      <DependentUpon>CreateSphereForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -79,6 +95,9 @@
     </Compile>
     <EmbeddedResource Include="ShapeEditorForm.resx">
       <DependentUpon>ShapeEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Shapes\CreateCubeForm.resx">
+      <DependentUpon>CreateCubeForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

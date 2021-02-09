@@ -71,5 +71,47 @@ namespace _3DShapeEditor
                 Cursor.Current = Cursors.Default;
             }
         }
+
+        private void createCubeButton_Click(object sender, EventArgs e)
+        {
+            CreateCubeForm ccf = new CreateCubeForm();
+            if (ccf.ShowDialog() == DialogResult.OK)
+            {
+                float size = ccf.size;
+                float x = ccf.x;
+                float y = ccf.y;
+                float z = ccf.z;
+                float xAngle = ccf.xAngle;
+                float yAngle = ccf.yAngle;
+                float zAngle = ccf.zAngle;
+                float xScale = ccf.xScale;
+                float yScale = ccf.yScale;
+                float zScale = ccf.zScale;
+                shapeManager.AddShape(new Cube(Color.Bisque, size, x, y, z, xAngle, yAngle, zAngle, xScale, yScale, zScale));
+            }
+            ccf.Close();
+        }
+
+        private void createSphereButton_Click(object sender, EventArgs e)
+        {
+            CreateSphereForm csf = new CreateSphereForm();
+            if (csf.ShowDialog() == DialogResult.OK)
+            {
+                int parallel = csf.parallelCount;
+                int meridian = csf.meridianCount;
+                float size = csf.size;
+                float x = csf.x;
+                float y = csf.y;
+                float z = csf.z;
+                float xAngle = csf.xAngle;
+                float yAngle = csf.yAngle;
+                float zAngle = csf.zAngle;
+                float xScale = csf.xScale;
+                float yScale = csf.yScale;
+                float zScale = csf.zScale;
+                shapeManager.AddShape(new Sphere(Color.Bisque, size, parallel, meridian, x, y, z, xAngle, yAngle, zAngle, xScale, yScale, zScale));
+            }
+            csf.Close();
+        }
     }
 }

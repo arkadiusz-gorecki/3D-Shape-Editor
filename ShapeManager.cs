@@ -23,22 +23,21 @@ namespace _3DShapeEditor
             width = w;
             height = h;
 
-            camera = new Camera(new Vertex(0, 0, 0), new Vertex(1, 0, 5), (float)width / height, 90, 1, 10, mousePosition);
+            camera = new Camera(new Vertex(0, 6, -6), new Vertex(0, 0, 0), (float)width / height, 90, 1, 15, mousePosition);
 
             pipeline = new Pipeline(camera.GetViewMatrix, camera.GetProjectionMatrix, width, height);
 
             shapes = new List<Shape>();
-            GenerateCubes();
+            GenerateShapes();
         }
 
-        private void GenerateCubes()
+        private void GenerateShapes()
         {
-            shapes.Add(new Cube(Color.Red, 1, 0, 0, 4, 0, 0, 0, 1, 1, 2));
-            shapes.Add(new Cube(Color.Orange, 1, 0, 8, 0, 0, 0, 0, 1, 1, 1));
-            shapes.Add(new Cube(Color.Yellow, 1, 4, 0, 0, 0, 0, 0, 1, 1, 1));
-            shapes.Add(new Cube(Color.Green, 1, -4, 0, 0, 0, 0, 0, 1, 1, 1));
-            shapes.Add(new Cube(Color.Aquamarine, 1, 0, -8, 0, 0, 0, 0, 1, 1, 1));
-            shapes.Add(new Cube(Color.Blue, 1, 0, 0, -4, 0, 0, 0, 1, 1, 1));
+            shapes.Add(new Cube(Color.Red, 1, 0, 2, 6, 0, 0, 0, 1, 1, 3));
+            shapes.Add(new Cube(Color.Orange, 1, 0, 8, 0, 1, 1, 1, 1, 1, 1));
+            shapes.Add(new Sphere(Color.Lime, 2, 10, 10, 0, -5, 0, 0, 0, 0));
+            shapes.Add(new Sphere(Color.MediumPurple, 1, 10, 10, 2, -5, 0));
+            shapes.Add(new Sphere(Color.White, 2, 10, 10, 8, 8, 8, 0, 1, 0, 1, 1, 2));
         }
 
         internal void ChangeDrawingScreenResolution(int w, int h)
@@ -54,9 +53,13 @@ namespace _3DShapeEditor
         public void DrawAllShapes(Bitmap bitmap)
         {
             pipeline.ClearDepthBuffer();
-            foreach (Shape shape in Shapes)
+            foreach (Shape shape in shapes)
                 shape.DrawEdges(bitmap, pipeline);
         }
 
+        internal void AddShape(Shape shape)
+        {
+            shapes.Add(shape);
+        }
     }
 }
