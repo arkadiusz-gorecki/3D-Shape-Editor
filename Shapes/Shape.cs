@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace _3DShapeEditor.Shapes
 {
-    abstract class Shape
+    abstract class Shape: MatrixOperations
     {
         protected float x = 0; // pozycja
         protected float y = 0;
@@ -21,9 +21,8 @@ namespace _3DShapeEditor.Shapes
         protected float zScale = 1;
 
         protected List<Triangle> triangles = new List<Triangle>(); // trójkąty reprezentujące figurę
-        protected List<ScreenTriangle> screenSpaceTriangles = new List<ScreenTriangle>(); // ostateczne trójkąty w 2D do bezpośredniego rysowania
 
-        protected Pen edgePen;
+        protected Color edgeColor;
 
         private Matrix4x4 modelMatrix;
         public Matrix4x4 GetModelMatrix { get => modelMatrix; }
@@ -44,54 +43,7 @@ namespace _3DShapeEditor.Shapes
             Matrix4x4 S = GetScalingMatrix(xScale, yScale, zScale);
             modelMatrix = T * Rx * Ry * Rz * S;
         }
-        private Matrix4x4 GetTranslationMatrix(float x, float y, float z)
-        {
-            Matrix4x4 T = new Matrix4x4(1, 0, 0, x,
-                                        0, 1, 0, y,
-                                        0, 0, 1, z,
-                                        0, 0, 0, 1);
-            return T;
-        }
-        private Matrix4x4 GetRotationXMatrix(float alpha)
-        {
-            Matrix4x4 Ry = new Matrix4x4(1, 0, 0, 0,
-                                        0, (float)Math.Cos(alpha), -(float)Math.Sin(alpha), 0,
-                                        0, (float)Math.Sin(alpha), (float)Math.Cos(alpha), 0,
-                                        0, 0, 0, 1);
-            return Ry;
-        }
-        private Matrix4x4 GetRotationYMatrix(float alpha)
-        {
-            Matrix4x4 Ry = new Matrix4x4((float)Math.Cos(alpha), 0, -(float)Math.Sin(alpha), 0,
-                                        0, 1, 0, 0,
-                                        (float)Math.Sin(alpha), 0, (float)Math.Cos(alpha), 0,
-                                        0, 0, 0, 1);
-            return Ry;
-        }
-        private Matrix4x4 GetRotationZMatrix(float alpha)
-        {
-            Matrix4x4 Ry = new Matrix4x4((float)Math.Cos(alpha), -(float)Math.Sin(alpha), 0, 0,
-                                        (float)Math.Sin(alpha), (float)Math.Cos(alpha), 0, 0,
-                                        0, 0, 1, 0,
-                                        0, 0, 0, 1);
-            return Ry;
-        }
-        private Matrix4x4 GetScalingMatrix(float xScale, float yScale, float zScale)
-        {
-            Matrix4x4 S = new Matrix4x4(xScale, 0, 0, 0,
-                                        0, yScale, 0, 0,
-                                        0, 0, zScale, 0,
-                                        0, 0, 0, 1);
-            return S;
-        }
-
-        private void UpdateScreenSpaceTriangles(Pipeline pipeline)
-        {
-            screenSpaceTriangles.Clear();
-            foreach (Triangle t in triangles)
-                screenSpaceTriangles.AddRange(pipeline.ModelToScreen(t));
-        }
-     
+       
         public void IncrementAngle()
         {
             // do debugowania
@@ -105,13 +57,13 @@ namespace _3DShapeEditor.Shapes
             UpdateModelMatrix();
         }
     
-        public void DrawEdges(Graphics g, Pipeline pipeline)
+        public void DrawEdges(Bitmap bitmap, Pipeline pipeline)
         {
-            pipeline.modelMatrix = modelMatrix;
-            pipeline.Update();
-            UpdateScreenSpaceTriangles(pipeline);
-            foreach (ScreenTriangle st in screenSpaceTriangles)
-                st.DrawEdges(g, edgePen);
+            pipeline.SetModelMatrix(modelMatrix);
+            pipeline.UpdateMatrices();
+
+            foreach (Triangle t in triangles)
+                pipeline.DrawTriangleEdges(bitmap, t, edgeColor);
         }
 
     }

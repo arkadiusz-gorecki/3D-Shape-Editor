@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace _3DShapeEditor.Shapes
 {
-    class Vertex // pionowy wektor reprezentujący pozycję w przestrzeni
+    public class Vertex // pionowy wektor reprezentujący pozycję w przestrzeni
     {
         public float X { get; set; } = 0;
         public float Y { get; set; } = 0;

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
+using System.Windows.Forms;
 
 namespace _3DShapeEditor
 {
@@ -10,29 +11,33 @@ namespace _3DShapeEditor
     {
         public static int width; // wymiary rysowania
         public static int height;
-        private List<Shape> shapes = new List<Shape>();
+        private List<Shape> shapes;
         private Camera camera;
-        internal List<Shape> Shapes { get => shapes;}
+        private Pipeline pipeline;
+        internal List<Shape> Shapes { get => shapes; }
         internal Camera Camera { get => camera;}
+        internal Pipeline Pipeline { get => pipeline; }
 
-        private Pipeline pipeline = new Pipeline();
-
-        public ShapeManager(int w, int h)
+        public ShapeManager(int w, int h, Point mousePosition)
         {
             width = w;
             height = h;
 
-            camera = new Camera(new Vertex(6, 0, -4), new Vertex(0, 0, 2), (float)width / height, 90, 1, 10);
+            camera = new Camera(new Vertex(0, 0, 0), new Vertex(1, 0, 5), (float)width / height, 90, 1, 10, mousePosition);
+
+            pipeline = new Pipeline(camera.GetViewMatrix, camera.GetProjectionMatrix, width, height);
+
+            shapes = new List<Shape>();
             GenerateCubes();
         }
 
         private void GenerateCubes()
         {
-            shapes.Add(new Cube(Color.Red, 1, 2, 0, 4, 0, 0, 0, 1, 1, 2));
-            shapes.Add(new Cube(Color.Orange, 1, 0, 4, 0, 0, 0, 0, 1, 1, 1));
+            shapes.Add(new Cube(Color.Red, 1, 0, 0, 4, 0, 0, 0, 1, 1, 2));
+            shapes.Add(new Cube(Color.Orange, 1, 0, 8, 0, 0, 0, 0, 1, 1, 1));
             shapes.Add(new Cube(Color.Yellow, 1, 4, 0, 0, 0, 0, 0, 1, 1, 1));
             shapes.Add(new Cube(Color.Green, 1, -4, 0, 0, 0, 0, 0, 1, 1, 1));
-            shapes.Add(new Cube(Color.Aquamarine, 1, 0, -4, 0, 0, 0, 0, 1, 1, 1));
+            shapes.Add(new Cube(Color.Aquamarine, 1, 0, -8, 0, 0, 0, 0, 1, 1, 1));
             shapes.Add(new Cube(Color.Blue, 1, 0, 0, -4, 0, 0, 0, 1, 1, 1));
         }
 
@@ -41,17 +46,16 @@ namespace _3DShapeEditor
             width = w;
             height = h;
             camera.ChangeAspect((float)w / h);
+            pipeline.SetScreenDimensions(w, h);
+            pipeline.SetViewMatrix(camera.GetViewMatrix);
+            pipeline.UpdateMatrices();
+            pipeline.InitializeDepthBuffer();
         }
-        public void DrawAllShapes(Graphics g)
+        public void DrawAllShapes(Bitmap bitmap)
         {
-            pipeline.viewMatrix = camera.GetViewMatrix;
-            pipeline.projectionMatrix = camera.GetProjectionMatrix;
-            pipeline.width = width;
-            pipeline.height = height;
-
-            g.Clear(Color.Black);
+            pipeline.ClearDepthBuffer();
             foreach (Shape shape in Shapes)
-                shape.DrawEdges(g, pipeline);
+                shape.DrawEdges(bitmap, pipeline);
         }
 
     }

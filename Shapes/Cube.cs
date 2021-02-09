@@ -11,7 +11,7 @@ namespace _3DShapeEditor.Shapes
     {
         private Cube(Color c)
         {
-            edgePen = new Pen(c, 1);
+            edgeColor = c;
 
             float a = 1;
             //ściana North
