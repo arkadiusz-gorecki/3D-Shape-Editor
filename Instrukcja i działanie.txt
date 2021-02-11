@@ -1,0 +1,8 @@
+﻿Instrukcja obsługi aplikacji
+WSAD - poruszanie kamerą
+Przytrzymanie prawym przyciskiem myszy na płótnie - obracanie kamery
+
+UWAGA
+- Nie da się przełączyć pomiędzy flat shadingiem a phong shading w samej aplikacji
+  Należy w klasie Triangle zmienić flagę "flatShading"
+- Stworzenie kuli i włączenie shadingu spowoduje wyjątek (nie są zdefiniowane normalne dla wierzchołków kuli)

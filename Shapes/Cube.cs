@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,51 +12,67 @@ namespace _3DShapeEditor.Shapes
     {
         private Cube(Color c)
         {
-            edgeColor = c;
-
+            color = c;
+            float ambient = 0.2f; // sumowanie do 1
+            float diffuse = 0.3f;
+            float specular = 0.5f;
+            material = new Material(c, ambient, diffuse, specular);
             float a = 1;
-            //ściana North
+            
+            //ściana Z+
             triangles.Add(new Triangle(-a, a, a,
                                        a, -a, a,
-                                       -a, -a, a));
+                                       -a, -a, a,
+                                       new Vector3(0, 0, 1)));
             triangles.Add(new Triangle(-a, a, a,
                                        a, a, a,
-                                       a, -a, a));
-            //ściana S
+                                       a, -a, a,
+                                       new Vector3(0, 0, 1)));
+            //ściana Z-
             triangles.Add(new Triangle(a, a, -a,
                                        -a, a, -a,
-                                       a, -a, -a));
+                                       a, -a, -a,
+                                       new Vector3(0, 0, -1)));
             triangles.Add(new Triangle(-a, a, -a,
                                        -a, -a, -a,
-                                       a, -a, -a));
-            //ściana E
+                                       a, -a, -a,
+                                       new Vector3(0, 0, -1)));
+            //ściana X-
             triangles.Add(new Triangle(-a, a, -a,
                                        -a, a, a,
-                                       -a, -a, a));
+                                       -a, -a, a,
+                                       new Vector3(-1, 0, 0)));
             triangles.Add(new Triangle(-a, a, -a,
                                        -a, -a, a,
-                                       -a, -a, -a));
-            //ściana W
+                                       -a, -a, -a,
+                                       new Vector3(-1, 0, 0)));
+            //ściana X+
             triangles.Add(new Triangle(a, a, -a,
                                        a, -a, -a,
-                                       a, -a, a));
+                                       a, -a, a,
+                                       new Vector3(1, 0, 0)));
             triangles.Add(new Triangle(a, a, -a,
                                        a, -a, a,
-                                       a, a, a));
-            //ściana Top
+                                       a, a, a,
+                                       new Vector3(1, 0, 0)));
+            //ściana Y+
             triangles.Add(new Triangle(a, a, a,
                                        -a, a, a,
-                                       -a, a, -a));
+                                       -a, a, -a,
+                                       new Vector3(0, 1, 0)));
             triangles.Add(new Triangle(a, a, a,
                                        -a, a, -a,
-                                       a, a, -a));
-            ////ściana Bottom
+                                       a, a, -a,
+                                       new Vector3(0, 1, 0)));
+            //ściana Y-
             triangles.Add(new Triangle(-a, -a, -a,
                                        -a, -a, a,
-                                       a, -a, a));
+                                       a, -a, a,
+                                       new Vector3(0, -1, 0)));
             triangles.Add(new Triangle(-a, -a, -a,
                                        a, -a, a,
-                                       a, -a, -a));
+                                       a, -a, -a,
+                                       new Vector3(0, -1, 0)));
         }
         public Cube(Color c, float size, float x, float y, float z): this(c)
         {

@@ -24,13 +24,14 @@ namespace _3DShapeEditor
         private Matrix4x4 projMatrix;
 
         private float cameraMovementSpeed = 0.2f;
-        private float cameraRotationSpeed = 0.01f;
+        private float cameraRotationSpeed = 0.005f;
         private bool mouseHolding;
         private Point lastMousePosition;
         private Point currentMousePosition;
 
         public Matrix4x4 GetViewMatrix { get => viewMatrix;}
         public Matrix4x4 GetProjectionMatrix { get => projMatrix; }
+        public Vertex GetPosition { get => P; }
 
         public void SetMouseHolding(bool holding, Point mousePosition)
         {

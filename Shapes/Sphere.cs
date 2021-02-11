@@ -11,8 +11,11 @@ namespace _3DShapeEditor.Shapes
     {
         private Sphere(Color c, int parallelCount, int meridianCount)
         {
-            edgeColor = c;
-            float a = 1;
+            color = c;
+            float ambient = 0.2f; // sumowanie do 1
+            float diffuse = 0.7f;
+            float specular = 0.1f;
+            material = new Material(c, ambient, diffuse, specular);
 
             Vertex v1, v2, v3, v4;
             float dx, dy, dz;

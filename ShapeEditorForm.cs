@@ -12,6 +12,8 @@ namespace _3DShapeEditor
         private int fpsCap = 20;
         private Timer drawingTimer;
         private ShapeManager shapeManager;
+
+        private bool animate = false;
         public ShapeEditorForm()
         {
             InitializeComponent();
@@ -32,24 +34,21 @@ namespace _3DShapeEditor
             shapeManager.Camera.Move();
             shapeManager.Pipeline.SetViewMatrix(shapeManager.Camera.GetViewMatrix);
             shapeManager.Pipeline.UpdateMatrices();
-            //foreach (Shape shape in shapeManager.Shapes)
-            //    shape.IncrementAngle(); // obiekty się obracają
+            if(animate) // obiekty się obracają
+                foreach (Shape shape in shapeManager.Shapes)
+                    shape.IncrementAngle();
             mainPictureBox.Invalidate();
         }
         private void mainPictureBox_Paint(object sender, PaintEventArgs e)
         {
             bitmap = new Bitmap(mainPictureBox.Width, mainPictureBox.Height);
-            e.Graphics.Clear(Color.Black);
+            e.Graphics.Clear(Color.FromArgb(40, 40, 40));
             shapeManager.DrawAllShapes(bitmap);
             e.Graphics.DrawImage(bitmap, 0, 0);
         }
         private void mainPictureBox_SizeChanged(object sender, EventArgs e)
         {
             shapeManager.ChangeDrawingScreenResolution(mainPictureBox.Width, mainPictureBox.Height);
-        }
-        private void backfaceCullingCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            shapeManager.Pipeline.EnableBackfaceCulling(backfaceCullingCheckBox.Checked);
         }
         private void mainPictureBox_MouseDown(object sender, MouseEventArgs e)
         {
@@ -77,6 +76,7 @@ namespace _3DShapeEditor
             CreateCubeForm ccf = new CreateCubeForm();
             if (ccf.ShowDialog() == DialogResult.OK)
             {
+                Color color = ccf.color;
                 float size = ccf.size;
                 float x = ccf.x;
                 float y = ccf.y;
@@ -87,7 +87,7 @@ namespace _3DShapeEditor
                 float xScale = ccf.xScale;
                 float yScale = ccf.yScale;
                 float zScale = ccf.zScale;
-                shapeManager.AddShape(new Cube(Color.Bisque, size, x, y, z, xAngle, yAngle, zAngle, xScale, yScale, zScale));
+                shapeManager.AddShape(new Cube(color, size, x, y, z, xAngle, yAngle, zAngle, xScale, yScale, zScale));
             }
             ccf.Close();
         }
@@ -97,6 +97,7 @@ namespace _3DShapeEditor
             CreateSphereForm csf = new CreateSphereForm();
             if (csf.ShowDialog() == DialogResult.OK)
             {
+                Color color = csf.color;
                 int parallel = csf.parallelCount;
                 int meridian = csf.meridianCount;
                 float size = csf.size;
@@ -109,9 +110,34 @@ namespace _3DShapeEditor
                 float xScale = csf.xScale;
                 float yScale = csf.yScale;
                 float zScale = csf.zScale;
-                shapeManager.AddShape(new Sphere(Color.Bisque, size, parallel, meridian, x, y, z, xAngle, yAngle, zAngle, xScale, yScale, zScale));
+                shapeManager.AddShape(new Sphere(color, size, parallel, meridian, x, y, z, xAngle, yAngle, zAngle, xScale, yScale, zScale));
             }
             csf.Close();
+        }
+
+        private void backfaceCullingCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            shapeManager.Pipeline.EnableBackfaceCulling(backfaceCullingCheckBox.Checked);
+        }
+        private void zBufferingCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            shapeManager.Pipeline.EnableZBuffering(zBufferingCheckBox.Checked);
+        }
+        private void drawingEdgesCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            shapeManager.Pipeline.EnableDrawingEdges(drawingEdgesCheckBox.Checked);
+            shadingCheckBox.Enabled = !drawingEdgesCheckBox.Checked;
+                
+        }
+
+        private void shadingCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            shapeManager.Pipeline.EnableShading(shadingCheckBox.Checked);
+        }
+
+        private void animateCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            animate = animateCheckBox.Checked;
         }
     }
 }

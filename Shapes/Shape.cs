@@ -22,11 +22,17 @@ namespace _3DShapeEditor.Shapes
 
         protected List<Triangle> triangles = new List<Triangle>(); // trójkąty reprezentujące figurę
 
-        protected Color edgeColor;
+        protected Color color;
+        protected Material material = new Material();
 
         private Matrix4x4 modelMatrix;
-        public Matrix4x4 GetModelMatrix { get => modelMatrix; }
-
+        public List<Triangle> Triangles { get => triangles; }
+        public Matrix4x4 ModelMatrix { get => modelMatrix; }
+        public Color Color { get => color; }
+        public Material GetMaterial()
+        {
+            return material;
+        }
         public void ChangeProperties(float x, float y, float z, float xAngle, float yAngle, float zAngle, float xScale, float yScale, float zScale)
         {
             this.x = x; this.y = y; this.z = z;
@@ -56,15 +62,27 @@ namespace _3DShapeEditor.Shapes
             //    z = -1f;
             UpdateModelMatrix();
         }
-    
-        public void DrawEdges(Bitmap bitmap, Pipeline pipeline)
-        {
-            pipeline.SetModelMatrix(modelMatrix);
-            pipeline.UpdateMatrices();
 
-            foreach (Triangle t in triangles)
-                pipeline.DrawTriangleEdges(bitmap, t, edgeColor);
+
+    }
+
+    public class Material
+    {
+        public Color ka = Color.FromArgb(100, 100, 100);
+        public Color kd = Color.FromArgb(100, 100, 100);
+        public Color ks = Color.FromArgb(55, 55, 55);
+        public float shininess = 2;
+
+        public Material()
+        {
+
         }
 
+        public Material(Color c, float ambient, float diffuse, float specular)
+        {
+            ka = Color.FromArgb((int)(c.R * ambient), (int)(c.G * ambient), (int)(c.B * ambient));
+            kd = Color.FromArgb((int)(c.R * diffuse), (int)(c.G * diffuse), (int)(c.B * diffuse));
+            ks = Color.FromArgb((int)(c.R * specular), (int)(c.G * specular), (int)(c.B * specular));
+        }
     }
 }

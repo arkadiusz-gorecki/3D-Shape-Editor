@@ -66,6 +66,8 @@
     <Compile Include="Shapes\CreateCubeForm.Designer.cs">
       <DependentUpon>CreateCubeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Shapes\Light.cs" />
+    <Compile Include="Shapes\ScreenPoint.cs" />
     <Compile Include="Shapes\ScreenTriangle.cs" />
     <Compile Include="ShapeEditorForm.cs">
       <SubType>Form</SubType>
